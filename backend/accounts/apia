@@ -1,0 +1,24 @@
+GET http://127.0.0.1:8000/api/accounts/profile/
+POST http://127.0.0.1:8000/api/accounts/refresh/
+POST http://127.0.0.1:8000/api/accounts/login/
+POST http://127.0.0.1:8000/api/accounts/register/
+
+
+GET http://127.0.0.1:8000/api/topics/ 
+POST http://127.0.0.1:8000/api/topics/ 
+GET http://127.0.0.1:8000/api/topics/<id>/ 
+PUT http://127.0.0.1:8000/api/topics/<id>/ 
+DELETE http://127.0.0.1:8000/api/topics/<id>/ 
+
+
+GET http://127.0.0.1:8000/api/quizzes/ 
+POST http://127.0.0.1:8000/api/quizzes/ 
+GET http://127.0.0.1:8000/api/quizzes/<id>/ 
+PUT http://127.0.0.1:8000/api/quizzes/<id>/ 
+
+
+
+POST http://127.0.0.1:8000/api/attempts/start/<quiz_id>/
+POST http://127.0.0.1:8000/api/attempts/submit/<attempt_id>/
+GET http://127.0.0.1:8000/api/attempts/
+GET http://127.0.0.1:8000/api/attempts/<id>/
