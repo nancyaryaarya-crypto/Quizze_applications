@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Central Axios instance — all API calls go through here
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://13.60.82.107/api/",
+  // baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/",
   headers: {
     "Content-Type": "application/json",
   },
