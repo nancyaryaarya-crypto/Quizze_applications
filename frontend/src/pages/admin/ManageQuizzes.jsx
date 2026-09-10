@@ -141,7 +141,7 @@ const ManageQuizzes = () => {
                         </button>
                         <button
                           className="btn btn-outline-sm"
-                          onClick={() => navigate(`/admin/quizzes/edit/${quiz.id}`)}
+                          onClick={() => navigate(`/admin/quizzes/${quiz.id}/edit`)}
                           title="Edit Quiz Settings"
                         >
                           Edit

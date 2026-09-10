@@ -119,6 +119,7 @@ SIMPLE_JWT = {
 
 
 CORS_ALLOWED_ORIGINS = [
+    "http://13.60.82.107",
     "http://localhost:5173",
 ]
 # Password validation
