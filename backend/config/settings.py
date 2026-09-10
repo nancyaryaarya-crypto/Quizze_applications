@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -88,13 +88,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'quizdb',
-        'USER': 'postgres',
-        'PASSWORD': 'Nancy@20',
-        'HOST': 'localhost',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "quizdb",
+        "USER": "postgres",
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": "database-1.c3yo88ym08v0.eu-north-1.rds.amazonaws.com",
+        "PORT": "5432",
     }
 }
 
