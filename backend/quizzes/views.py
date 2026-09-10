@@ -11,12 +11,19 @@ from .serializer import QuizSerializer, QuizDetailSerializer, AdminQuestionSeria
 def quiz_list_create(request):
 
     if request.method == "GET":
-
-        quizzes = Quiz.objects.filter(is_active=True)
+        if request.user.role == "ADMIN":
+            quizzes = Quiz.objects.filter(
+                created_by=request.user,
+                is_active=True
+            )
+        else:
+            quizzes = Quiz.objects.filter(is_active=True)
+        
         serializer = QuizSerializer(quizzes, many=True)
         return Response(serializer.data)
 
     elif request.method == "POST":
+   
 
         if request.user.role != "ADMIN":
             return Response(
@@ -44,7 +51,17 @@ def quiz_list_create(request):
 def quiz_detail(request, pk):
 
     try:
-        quiz = Quiz.objects.get(pk=pk)
+        if request.user.role == "ADMIN":
+            quiz = Quiz.objects.get(
+                pk=pk,
+                created_by=request.user
+            )
+        else:
+            quiz = Quiz.objects.get(
+                 pk=pk,
+                 is_active=True
+            )
+        
     except Quiz.DoesNotExist:
         return Response(
             {"error": "Quiz not found"},
@@ -94,7 +111,16 @@ def quiz_questions_list_create(request, quiz_id):
         return Response({'error': 'Only Admin can manage questions.'}, status=status.HTTP_403_FORBIDDEN)
     
     try:
-        quiz = Quiz.objects.get(pk=quiz_id)
+        if request.user.role == "ADMIN":
+            quiz = Quiz.objects.get(
+                pk=quiz_id,
+                created_by=request.user
+            )
+        else:
+            quiz = Quiz.objects.get(
+                pk=quiz_id,
+                is_active=True
+            )
     except Quiz.DoesNotExist:
         return Response({'error': 'Quiz not found.'}, status=status.HTTP_404_NOT_FOUND)
 

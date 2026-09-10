@@ -6,6 +6,7 @@ import Loading from "../../components/Loading";
 import useAuth from "../../hooks/useAuth";
 import { getAttempts } from "../../services/attemptService";
 import { getQuizzes } from "../../services/quizService";
+import { getTopics } from "../../services/topicService";
 
 const StudentDashboard = () => {
   const { currentUser } = useAuth();
@@ -13,17 +14,20 @@ const StudentDashboard = () => {
 
   const [attempts, setAttempts] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+  const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [attemptsData, quizzesData] = await Promise.all([
+        const [attemptsData, quizzesData, topicsData] = await Promise.all([
           getAttempts(),
           getQuizzes(),
+          getTopics(),
         ]);
         setAttempts(attemptsData);
         setQuizzes(quizzesData);
+        setTopics(topicsData);
       } catch {
         // Silently fail — page still renders with partial data
       } finally {
@@ -53,15 +57,16 @@ const StudentDashboard = () => {
     .sort((a, b) => new Date(b.started_at) - new Date(a.started_at))
     .slice(0, 5);
 
-  const recommendedTopics = [
-    { icon: "🐍", name: "Python", desc: "Learn backend basics", color: "color-2" },
-    { icon: "⚛️", name: "React", desc: "Build modern UIs", color: "color-3" },
-    { icon: "📜", name: "JavaScript", desc: "Master web logic", color: "color-4" },
-    { icon: "🎨", name: "HTML & CSS", desc: "Structure & style", color: "color-5" },
-    { icon: "🗄️", name: "SQL", desc: "Database mastery", color: "color-2" },
-  ];
+ 
 
   if (loading) return <Loading message="Loading dashboard..." />;
+  const availableTopics = topics.filter(topic =>
+    quizzes.some(
+        quiz =>
+            quiz.topic === topic.id &&
+            quiz.is_active
+    )
+   );
 
   return (
     <div className="layout">
@@ -205,12 +210,12 @@ const StudentDashboard = () => {
                   <h2>Recommended Topics</h2>
                 </div>
                 <div className="topics-list">
-                  {recommendedTopics.map((topic, index) => (
-                    <div key={index} className="topic-card-small" onClick={() => navigate("/student/topics")}>
-                      <div className={`topic-icon stat-icon-wrap bg-${topic.color} text-${topic.color}`} style={{ width: "48px", height: "48px", fontSize: "1.2rem", marginRight: "1rem" }}>{topic.icon}</div>
+                  {availableTopics.map((topic) => (
+                    <div key={topic.id} className="topic-card-small" onClick={() => navigate("/student/topics")}>
+                      <div className={`topic-icon stat-icon-wrap bg-${topic.color} text-${topic.color}`} style={{ width: "48px", height: "48px", fontSize: "1.2rem", marginRight: "1rem" }}>📚</div>
                       <div className="topic-info">
                         <h4>{topic.name}</h4>
-                        <p>{topic.desc}</p>
+                        <p>{topic.description}</p>
                       </div>
                       <div className="topic-arrow">→</div>
                     </div>

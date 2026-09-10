@@ -14,16 +14,21 @@ def topic_list_create(request):
 
     if request.method == "GET":
 
-        topics = Topic.objects.filter(is_active=True)
+        if request.user.role == "ADMIN":
+            topics = Topic.objects.filter(
+                created_by=request.user,
+                is_active=True
+            )
+        else:
+            topics = Topic.objects.filter(
+                is_active=True
+            )
 
         serializer = TopicSerializer(topics, many=True)
-
         return Response(serializer.data)
-
 
     elif request.method == "POST":
 
-        # Only admin can create topic
         if request.user.role != "ADMIN":
             return Response(
                 {"error": "Only Admin can create topics."},
@@ -34,7 +39,6 @@ def topic_list_create(request):
 
         if serializer.is_valid():
             serializer.save(created_by=request.user)
-
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED
@@ -51,7 +55,17 @@ def topic_list_create(request):
 def topic_detail(request, pk):
 
     try:
-        topic = Topic.objects.get(pk=pk)
+        if request.user.role == "ADMIN":
+           topic = Topic.objects.get(
+               pk=pk,
+               created_by=request.user
+            )
+        else:
+            topic = Topic.objects.get(
+                pk=pk,
+                is_active=True
+            )
+        # topic = Topic.objects.get(pk=pk)
 
     except Topic.DoesNotExist:
         return Response(
